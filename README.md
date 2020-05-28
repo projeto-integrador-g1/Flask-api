@@ -1,58 +1,24 @@
-# Projeto Integrador 
+# Flask-RESTFull API:
+Interface to conect a WebGIS plataform to an IA Service and a Imgur API.
 
+# Technologies:
 
-## About this Project
-A webgis project that aims to create an analysis of satelite image by means of AI, making it able to identify plots of land
+**[Python](https://www.python.org/downloads/)** 
+Using the 3.8.3v. Access the link and look for the download section that 
+best fits your OS.
 
-## Getting Started 
-### Prerequisites
-To run this project in the development mode, you'll need to have:
-- [Node.js](https://nodejs.org/en/)
+**[Imgur API](https://github.com/Imgur/imgurpython)** 
+Using the 3v. A remote storage for the images and masks resulted of the IA 
+service. We are using the Python supported version as well.
 
-Also, you'll need to the Flask-REST running locally on your machine. You can find the Flask-REST and all the instructions to start Flask-REST:
-- [Flask-REST](https://gitlab.com/projeto-integrador-fatec/api)
+## Installing dependencies with pip:
 
-### Installing
-**Cloning the Repository**
+OBS: pip is alread install in this Python version.
+```
+pip install -r requirements
+```
 
-``$ git clone https://gitlab.com/projeto-integrador-fatec/web-gis-platform.git ``
-
-``$ cd web-gis-platform``
-
-**Installing dependencies**
-
-``$ npm install``
-
-or 
-
-``$ yarn ``
-
-**Running**
-
-``npm run dev``
-
-or
-
-``yarn serve``
-
-## Built With
-
-- [Vue.js](https://vuejs.org/) WebGIS Component
-- [Vuetify](https://vuetifyjs.com/en/) Design/Style
-- [Mapbox](https://www.mapbox.com/) Map Component
-- [Keras](https://keras.io/) Neural Network
-- [Tensor Flow](https://www.tensorflow.org/) IA
-- [Flask](https://flask.palletsprojects.com/en/1.1.x/) Back-End REST
-- [MongoDB](https://www.mongodb.com/) Database
-- [Imgur API](https://apidocs.imgur.com/?version=latest) Upload/Download images
-
-
-## Authors
-
-- Bruno Ferro - @BuiuFerro
-- Fábio Rodrigues - @fabiordrig 
-- Leonardo Tamanhão - @Dhonrian 
-- Luciano Cabral - @luciano-sjc35 
-- Luís Belo - @Luis.Belo
-- Matheus Froes - @Matheus-FC 
-
+## Initializing:
+```
+python manage.py run
+```
