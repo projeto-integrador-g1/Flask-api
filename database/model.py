@@ -8,3 +8,4 @@ class User(db.Document):
 class GeoInfo(db.Document):
     user_id = db.StringField(required=True)
     geo_coord = db.StringField(required=True)
+    geo_request = db.StringField(required=False)
