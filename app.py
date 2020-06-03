@@ -14,4 +14,4 @@ app.config['MONGODB_SETTINGS'] = {
 
 initialize_db(app)
 initialize_routes(api)
-app.run()
+app.run(host='127.0.0.1', port=4002)

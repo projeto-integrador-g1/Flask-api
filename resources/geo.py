@@ -2,6 +2,7 @@ from  flask import Response, request
 from flask_restful import Resource
 from database.model import GeoInfo, User
 import json
+import requests
 
 class GeoRequest(Resource):
     ## Will get and save geo location requested by the user 
@@ -10,6 +11,9 @@ class GeoRequest(Resource):
         body = request.get_json()
         geo = GeoInfo(**body).save()
         id = geo.id
+        r = request.post('http://127.0.0.1:8922/ia/', json={"key": "value"})
+        r.status_code
+        r.json(body)
         return {'Request id': str(id)}, 200
     #Return all requests made to the AI
     def get(self):
