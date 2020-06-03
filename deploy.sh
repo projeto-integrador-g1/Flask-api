@@ -20,8 +20,8 @@ git init
 
 # inside this git repo we'll pretend to be a new user
 # dentro desse repositório nós pretendemos ser um novo usuário
-git config user.name "Travis CI"
-git config user.email "leocardosoti@gmail.com"
+git config user.name "projeto-integrador-g1"
+git config user.email "fatec.sjc.pi@gmail.com"
 
 # O primeiro e único commit do seu repositório terá
 # todos os arquivos presentes e a mensagem do commit será "Deploy to GitHub Pages"
