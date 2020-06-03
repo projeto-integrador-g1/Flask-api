@@ -4,3 +4,4 @@ flask-mongoengine
 dnspython
 flask_cors
 flask_mongoengine
+requests
