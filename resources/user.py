@@ -2,8 +2,6 @@ from  flask import Response, request
 from database.model import User
 from flask_restful import Resource
 
-
-#test
 class UsersApi(Resource):
     #Get all users
     def get(self):
@@ -39,5 +37,3 @@ class UserApi(Resource):
             return 'User Removed', 200
         except:
             return Response("User not Found", status=500)
-
-
