@@ -101,7 +101,7 @@ print(items.summary())
 print(items.summary())
 
 items.save('test.json')
-items2 = Items.load('test.json')
+items2 = items.load('test.json')
 
 print(items2.summary(['date', 'id', 'eo:cloud_cover']))
 
@@ -114,7 +114,7 @@ items = search.items()
 print(items.summary())
 
 items.save('test.json')
-items2 = Items.load('test.json')
+items2 = items.load('test.json')
 
 print(items2.summary(['date', 'id', 'eo:cloud_cover']))
 
