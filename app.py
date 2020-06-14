@@ -6,7 +6,7 @@ from flask_cors import CORS
 
 app = Flask(__name__)
 api = Api(app)
-CORS(api)
+CORS(app)
 app.config['MONGODB_SETTINGS'] = {
     'db': 'Cluster0',
     'host': 'mongodb+srv://piAdmin:pi1234@cluster0-vpcqm.gcp.mongodb.net/test?retryWrites=true&w=majority',
