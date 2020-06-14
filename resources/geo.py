@@ -9,6 +9,7 @@ client = MongoClient('mongodb+srv://piAdmin:pi1234@cluster0-vpcqm.gcp.mongodb.ne
 db = client['test']
 collection_currency = db['geo_info']
 
+
 class GeoRequest(Resource):
     ## Will get and save geo location requested by the user 
     # that will be processed by the AI
@@ -19,12 +20,13 @@ class GeoRequest(Resource):
         #r = request.post('http://127.0.0.1:8922/ia/', json={"key": "value"})
         #r.status_code
         #r.json(body)
-        body.save('test.json')
-        with open('test.json') as json_file:
-            file_data = json.load(json_file)
+        with open('result.json', 'w') as fp:
+            json.dump(body, fp)
+        with open('result.json') as f:
+            file_data = json.load(f)
         collection_currency.insert(file_data)
         client.close()
-        return {'Sucess'}, 200
+        return Response('', status=200)
     #Return all requests made to the AI
 
         
