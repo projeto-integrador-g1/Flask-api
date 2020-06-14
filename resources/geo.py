@@ -19,7 +19,10 @@ class GeoRequest(Resource):
         #r = request.post('http://127.0.0.1:8922/ia/', json={"key": "value"})
         #r.status_code
         #r.json(body)
-        collection_currency.insert(body)
+        body.save('test.json')
+        with open('test.json') as json_file:
+            file_data = json.load(json_file)
+        collection_currency.insert(file_data)
         client.close()
         return {'Sucess'}, 200
     #Return all requests made to the AI
