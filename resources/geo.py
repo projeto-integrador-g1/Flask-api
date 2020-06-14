@@ -1,6 +1,6 @@
 from  flask import Response, request
 from flask_restful import Resource
-from database.model import GeoInfo, User
+from database.model import User
 import json
 import requests
 from pymongo import MongoClient
@@ -8,6 +8,7 @@ client = MongoClient('mongodb+srv://piAdmin:pi1234@cluster0-vpcqm.gcp.mongodb.ne
 
 db = client['test']
 collection_currency = db['geo_info']
+
 class GeoRequest(Resource):
     ## Will get and save geo location requested by the user 
     # that will be processed by the AI
@@ -23,13 +24,7 @@ class GeoRequest(Resource):
         client.close()
         return {'Sucess'}, 200
     #Return all requests made to the AI
-    def get(self):
-        geo = GeoInfo.objects().to_json()
-        return Response(geo, mimetype="application/json", status=200)
 
-class GeoInfo(Resource):
-    def post(self):
-        body = request.get_json()
         
 class GeoSaveImage(Resource):
     ## Will get and save the processed image to the specifc user
