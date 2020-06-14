@@ -1,6 +1,8 @@
 from  flask import Response, request
 from flask_restful import Resource
 from database.model import User
+from database.getmongo import getImages
+from flask import jsonify
 import json
 import requests
 from pymongo import MongoClient
@@ -26,10 +28,10 @@ class GeoRequest(Resource):
             file_data = json.load(f)
         collection_currency.insert(file_data)
         client.close()
-        return Response('', status=200)
+        r = getImages()
+        return jsonify(r)
     #Return all requests made to the AI
 
-        
 class GeoSaveImage(Resource):
     ## Will get and save the processed image to the specifc user
     def post(self):
