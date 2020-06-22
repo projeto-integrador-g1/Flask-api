@@ -28,7 +28,7 @@ class GeoRequest(Resource):
             file_data = json.load(f)
         collection_currency.insert(file_data)
         client.close()
-        r = getImages()
+        r = getImages(body["date"], body["satelite"], body["cloudCouverage"], body["geo_coord"])
         return jsonify(r)
     #Return all requests made to the AI
 
