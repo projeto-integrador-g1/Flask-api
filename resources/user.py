@@ -1,7 +1,7 @@
 from  flask import Response, request
 from database.model import User
 from flask_restful import Resource
-
+import smtplib
 class UsersApi(Resource):
     #Get all users
     def get(self):
@@ -37,3 +37,31 @@ class UserApi(Resource):
             return 'User Removed', 200
         except:
             return Response("User not Found", status=500)
+
+class RecoverAPI(Resource):
+    def get(self, id):
+        try:
+            user = User.objects.get(id=id).to_json()
+            sender = 'email@email.com'
+            link = "password recover front"
+            receivers = user['user_email']
+            message = f"""From: From Person {sender}
+                    To: To Person {receivers}
+                    MIME-Version: 1.0
+                    Content-type: text/html
+                    Subject: Recuperação senha
+
+                    link para recuperação de senha :
+                    {link}
+
+                    <b>This is HTML message.</b>
+                    <h1>This is headline.</h1>
+                    """
+            smtpObj = smtplib.SMTP('localhost')
+            smtpObj.sendmail(sender, receivers, message)         
+            return Response("", status=200)
+        except:
+            return Response("User not Found", status=500)
+    def post(self):
+        body = request.get_json()
+        #add JWT features

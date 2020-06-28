@@ -1,7 +1,7 @@
 from  flask import Response, request
 from flask_restful import Resource
 from database.model import User
-from database.getmongo import getImages
+from database.getmongo import getImages, getToAi
 from flask import jsonify
 import json
 import requests
@@ -28,9 +28,10 @@ class GeoRequest(Resource):
             file_data = json.load(f)
         collection_currency.insert(file_data)
         client.close()
+        print(body)
         r = getImages(body["date"], body["satelite"], body["cloudCouverage"], body["geo_coord"])
-        return jsonify(r)
-    #Return all requests made to the AI
+        return r,200
+    
 
 class GeoSaveImage(Resource):
     ## Will get and save the processed image to the specifc user
@@ -47,3 +48,16 @@ class GeoSaveImage(Resource):
         userjson['user_imgs'] = str(userjson['user_imgs']) + str(body['user_imgs']) + ';'
         User.objects.get(id=body['user_id']).update(**userjson)
         return Response('', status=200)
+
+class AIRequest(Resource):
+    #make requests to AI
+    def post(self):
+        body = request.get_json()
+        req = body['sent']
+        r = getToAi(req)
+        #next step call AI
+        return Response('', status=200)
+    def get(self):
+        pload = {'_id':'1234567','Satus':'Done'}
+        r = requests.post('front url',data = pload)
+        return 200

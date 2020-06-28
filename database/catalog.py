@@ -1,5 +1,5 @@
 from satstac import Catalog, Collection, Item
-import urllib.request, json
+import urllib.request, json, time
 from pymongo import MongoClient
 client = MongoClient('mongodb+srv://piAdmin:pi1234@cluster0-vpcqm.gcp.mongodb.net/test?retryWrites=true&w=majority', 27017)
 
@@ -13,14 +13,22 @@ print(cat)
 #mycat = Catalog(data)
 #https://landsat-stac.s3.amazonaws.com/landsat-8-l1/ LC80101172015002LGN00
 col = Collection.open('https://landsat-stac.s3.amazonaws.com/landsat-8-l1/catalog.json')
-print(col, col.extent)
+#print(col, col.extent)
 #print(col.items())
-i=1
+
 def populateDatabase():
+    i=1
+    limiter = 101
+    re = col.items()
+    print(re)
     for item in col.items():
-        print(item)
+        #print(item)
         #item2 = Item.open(item)
         #print(item2)
+        if i == limiter:
+            limiter = limiter + 100
+            print(i)
+            time.sleep(240)
         row = item.properties['eo:row']
         column = item.properties['eo:column']
         data = item.properties['datetime']
@@ -36,12 +44,12 @@ def populateDatabase():
         del test2['assets']
         with open('mycat/catalog' + str(i) +'.json', 'w') as outfile:
             json.dump(test2, outfile)
-        
         with open('mycat/catalog'+  str(i)  + '.json') as f:
             file_data = json.load(f)
-        collection_currency.insert(file_data)
-        print(url)
+        #collection_currency.insert(file_data)
+        #print(url)
         i = i + 1
     client.close()
 
+cont = 0
 populateDatabase()

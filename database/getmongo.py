@@ -53,14 +53,39 @@ def getImages(date, satelite, cloudCouverage, geo_coord):
         y = float(y)
         coord.append([y, x])
     print(coord)
-    cursor = collection_currency.find({ "geometry.coordinates": {
+    inicio = date[0]
+    fim = date[1]
+    cursor = collection_currency.find({ "geometry": {
                                                                 "$geoIntersects": {
                                                                     "$geometry": {
                                                                         "type": "Polygon" ,
                                                                         "coordinates": [coord]
                                                                     }
                                                                 }
-        }
+        },
+        "properties.eo:cloud_cover": {'$lte': cloudCouverage},
+        "properties.datetime": {'$gt':fim, '$lt': inicio }
     })
+    print(inicio)
+    print(fim)
+    info = {1:{'collection': '','scene_id': '','datetime': '','cloud_cover': '' ,'column': '','row': '', 'href': ''}}
+    i=1
     for document in cursor:
-        print(document)
+        info[i] = {}
+        info[i]['collection'] = document['properties']['collection']
+        info[i]['scene_id'] = document['properties']['landsat:scene_id']
+        info[i]['datetime'] = document['properties']['datetime']
+        info[i]['geo_coord'] = document['geometry']['coordinates']
+        info[i]['cloud_cover'] = document['properties']['eo:cloud_cover']
+        info[i]['column'] = document['properties']['eo:column']
+        info[i]['row'] = document['properties']['eo:row']
+        info[i]['href'] = document['assets']['thumbnail']['href']
+        i = i+1
+        #print("Column: " + document['properties']['eo:column'] + "Row: " + document['properties']['eo:row'] + " Cloud " + str(document['properties']['eo:cloud_cover'])+ "data" + str(document['properties']['datetime']))
+    return info
+
+def getToAi(req):
+    items = []
+    for item in req:
+        items.append(collection_currency.find({'_id': item}))
+    return items
