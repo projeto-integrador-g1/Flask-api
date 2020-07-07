@@ -11,6 +11,8 @@ client = MongoClient('mongodb+srv://piAdmin:pi1234@cluster0-vpcqm.gcp.mongodb.ne
 db = client['test']
 collection_currency = db['geo_info']
 
+coord = []
+
 
 class GeoRequest(Resource):
     ## Will get and save geo location requested by the user 
@@ -28,7 +30,13 @@ class GeoRequest(Resource):
             file_data = json.load(f)
         collection_currency.insert(file_data)
         client.close()
-        print(body)
+        global coord
+        for points in body["geo_coord"]:
+            x , y = points.split(",")
+            x = float(x)
+            y = float(y)
+            coord.append([y, x])
+        print(coord)
         r = getImages(body["date"], body["satelite"], body["cloudCouverage"], body["geo_coord"])
         return r,200
     
@@ -53,9 +61,13 @@ class AIRequest(Resource):
     #make requests to AI
     def post(self):
         body = request.get_json()
-        req = body['sent']
+        req = body['images']
         r = getToAi(req)
-        #next step call AI
+        global coord
+        print (coord)
+        print('PROBLEMA IA')
+        r.insert(0, coord)
+        retorno = requests.post('http://127.0.0.1:8922/ia', json=r)
         return Response('', status=200)
     def get(self):
         pload = {'_id':'1234567','Satus':'Done'}

@@ -52,9 +52,17 @@ def getImages(date, satelite, cloudCouverage, geo_coord):
         x = float(x)
         y = float(y)
         coord.append([y, x])
-    print(coord)
-    inicio = date[0]
-    fim = date[1]
+    #print(coord)
+    dt1 = datetime.strptime(date[0], "%Y-%m-%d")
+    dt2 = datetime.strptime(date[1], "%Y-%m-%d")
+    if dt1 > dt2:
+        inicio = date[0]
+        fim = date[1]
+    else:
+        inicio = date[1]
+        fim = date[0]
+    #inicio = date[0]
+    #fim = date[1]
     cursor = collection_currency.find({ "geometry": {
                                                                 "$geoIntersects": {
                                                                     "$geometry": {
@@ -87,5 +95,9 @@ def getImages(date, satelite, cloudCouverage, geo_coord):
 def getToAi(req):
     items = []
     for item in req:
-        items.append(collection_currency.find({'_id': item}))
+        cursor = collection_currency.find({'_id': item})
+        for document in cursor:
+            items.append(document)
+    
+    print('aaaaaaaaaaaaa2',items)
     return items
