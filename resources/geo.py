@@ -3,6 +3,9 @@ from flask_restful import Resource
 from database.model import User
 from database.getmongo import getImages, getToAi
 from flask import jsonify
+import shapefile as shp
+from osgeo import ogr
+import os
 import json
 import requests
 from pymongo import MongoClient
@@ -12,7 +15,7 @@ db = client['test']
 collection_currency = db['geo_info']
 
 coord = []
-
+antcoord = []
 
 class GeoRequest(Resource):
     ## Will get and save geo location requested by the user 
@@ -63,13 +66,33 @@ class AIRequest(Resource):
         body = request.get_json()
         req = body['images']
         r = getToAi(req)
-        global coord
+        global coord, antcoord
+        antcoord = coord
         print (coord)
-        print('PROBLEMA IA')
+        if not coord:
+            coord = antcoord
         r.insert(0, coord)
         retorno = requests.post('http://127.0.0.1:8922/ia', json=r)
+        del coord[:]
         return Response('', status=200)
     def get(self):
         pload = {'_id':'1234567','Satus':'Done'}
         r = requests.post('front url',data = pload)
         return 200
+
+class SHPFile(Resource):
+    def post(self):
+        body = request.values
+        daShapefile = r"C:\Users\mathe\layers\POLYGON.shp"
+        driver = ogr.GetDriverByName('ESRI Shapefile')
+
+        dataSource = driver.Open(daShapefile, 0) # 0 means read-only. 1 means writeable.
+        # Check to see if shapefile is found.
+        if dataSource is None:
+            print ('Could not open %s' % (daShapefile))
+        else:
+            print ('Opened %s' % (daShapefile))
+            layer = dataSource.GetLayer()
+            featureCount = layer.GetFeatureCount()
+            print ("Number of features in %s: %d" % (os.path.basename(daShapefile),featureCount))
+        return Response([], 200)
