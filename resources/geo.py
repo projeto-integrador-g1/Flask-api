@@ -4,8 +4,7 @@ from database.model import User
 from database.getmongo import getImages, getToAi
 from flask import jsonify
 import shapefile as shp
-from osgeo import ogr
-import os
+import os, io
 import json
 import fiona
 import rasterio
@@ -86,15 +85,27 @@ class AIRequest(Resource):
 
 class SHPFile(Resource):
     def post(self):
-        body = request.values
+        filezip = request.files
+        print(filezip['file'])
+        filezip['file'].save("file.zip")
         file_name = "file.zip"
+        vet = []
         with ZipFile(file_name, 'r') as zip:
             zip.printdir()
             print('aew caralho')
             zip.extractall()
             print('foi')
-        with fiona.open("C:/Users/mathe/layers/POLYGON.shp", "r") as shapefile:
-            shapes = [feature["geometry"] for feature in shapefile]
-        vet = shapes[0]['coordinates'][0]
-        print (vet[0])
-        return Response(vet, 200)
+        for file in os.listdir('./layers'):
+            if file.endswith('.shp'):
+                with fiona.open(os.path.join("./layers", file), "r") as shapefile:
+                    shapes = [feature["geometry"] for feature in shapefile]
+                for coord in shapes[0]['coordinates'][0]:
+                    vet.append(coord[0])
+                    vet.append(coord[1])
+                #vet = shapes[0]['coordinates'][0]
+        for file in os.listdir('./layers'):
+            os.remove(os.path.join("./layers", file))
+        print(vet)
+        env = {}
+        env['geo_coord'] = vet
+        return env, 200
