@@ -95,9 +95,9 @@ def getImages(date, satelite, cloudCouverage, geo_coord):
 def getToAi(req):
     items = []
     for item in req:
-        cursor = collection_currency.find({'_id': item})
+        print(type(item))
+        cursor = collection_currency.find({"properties.landsat:scene_id": item})
         for document in cursor:
             items.append(document)
     
-    print('aaaaaaaaaaaaa2',items)
     return items

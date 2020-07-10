@@ -69,6 +69,7 @@ class AIRequest(Resource):
         body = request.get_json()
         req = body['images']
         r = getToAi(req)
+        print(r)
         global coord, antcoord
         print (coord)
         if not coord:
