@@ -55,7 +55,8 @@ def geoSaveImage(email,addlinks):
     newlinks = ""
     for item in users:
         user = item
-    for item in user["user_imgs"]:
+    imgs = user["user_imgs"].split(",")
+    for item in imgs:
         newlinks = newlinks + item + ";"
     for item in addlinks:
         newlinks = newlinks + item + ";"

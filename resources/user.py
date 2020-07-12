@@ -37,7 +37,9 @@ class UserApi(Resource):
             user = collection_currency.find({"user_email": email})
             for us in user:
                 resp = us
-            return Response(resp, mimetype="application/json", status=200)
+            test = {}
+            test['user_imgs'] = resp['user_imgs']
+            return test, 200
         except:
             return Response("User not Found", status=500)
     #Update selected user
