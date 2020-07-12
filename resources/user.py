@@ -2,6 +2,12 @@ from  flask import Response, request
 from database.model import User
 from flask_restful import Resource
 import smtplib
+from pymongo import MongoClient
+client = MongoClient('mongodb+srv://piAdmin:pi1234@cluster0-vpcqm.gcp.mongodb.net/test?retryWrites=true&w=majority', 27017)
+user_email = ""
+db = client['test']
+collection_currency = db['user']
+
 class UsersApi(Resource):
     #Get all users
     def get(self):
@@ -16,10 +22,22 @@ class UsersApi(Resource):
 
 class UserApi(Resource):
     #Tries to get an specific user by id
-    def get(self, id):
+    
+    def post(self):
+        global user_email
+        body = request.get_json()
+        print(body['email'])
+        user_email = body['email']
+        return 200
+    def get(self):
         try:
-            user = User.objects.get(id=id).to_json()
-            return Response(user, mimetype="application/json", status=200)
+            global user_email
+            email = user_email
+            print('teoricamente sapoha tá cheia' + email)
+            user = collection_currency.find({"user_email": email})
+            for us in user:
+                resp = us
+            return Response(resp, mimetype="application/json", status=200)
         except:
             return Response("User not Found", status=500)
     #Update selected user
@@ -37,6 +55,11 @@ class UserApi(Resource):
             return 'User Removed', 200
         except:
             return Response("User not Found", status=500)
+    
+
+def getEmail():
+    global user_email
+    return user_email
 
 class RecoverAPI(Resource):
     def get(self, id):

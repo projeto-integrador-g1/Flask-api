@@ -4,6 +4,7 @@ from database.model import User
 from database.getmongo import getImages, getToAi
 from flask import jsonify
 #import shapefile as shp
+from .user import getEmail
 import os, io
 import json
 import fiona
@@ -19,6 +20,7 @@ collection_currency = db['geo_info']
 
 coord = []
 antcoord = []
+email = ''
 
 class GeoRequest(Resource):
     ## Will get and save geo location requested by the user 
@@ -46,27 +48,29 @@ class GeoRequest(Resource):
         r = getImages(body["date"], body["satelite"], body["cloudCouverage"], body["geo_coord"])
         return r,200
     
+def geoSaveImage(email,addlinks):
+    local = client['test']
+    collection = local['user']
+    users = collection.find({"user_email": email})
+    newlinks = ""
+    for item in users:
+        user = item
+    for item in user["user_imgs"]:
+        newlinks = newlinks + item + ";"
+    for item in addlinks:
+        newlinks = newlinks + item + ";"
+    myquerry = {"user_email": email}
+    newvalues = {"$set": {"user_imgs": newlinks}}
+    collection.update_one(myquerry, newvalues)
 
-class GeoSaveImage(Resource):
-    ## Will get and save the processed image to the specifc user
-    def post(self):
-        body = request.get_json()
-        user = User.objects.get(id=body['user_id']).to_json()
-        print(body)
-        print(user)
-        user = user[46:]
-        user = '{' + user
-        print(user)
-        userjson = json.loads(user)
-        print(userjson)
-        userjson['user_imgs'] = str(userjson['user_imgs']) + str(body['user_imgs']) + ';'
-        User.objects.get(id=body['user_id']).update(**userjson)
-        return Response('', status=200)
+    
+
+
+
 
 class AIRequest(Resource):
     #make requests to AI
     def post(self):
-        
         body = request.get_json()
         req = body['images']
         r = getToAi(req)
@@ -81,8 +85,10 @@ class AIRequest(Resource):
         coord = []
         retorno = requests.post('http://127.0.0.1:8922/ia', json=r)
         retornodata= retorno.json()
-        print(retornodata['links'])
-        return Response(retornodata, status=200)
+        print(retornodata)
+        email = getEmail()
+        geoSaveImage(email, retornodata['links'])
+        return retornodata, 200
     def get(self):
         pload = {'_id':'1234567','Status':'Done'}
         r = requests.post('front url',data = pload)
