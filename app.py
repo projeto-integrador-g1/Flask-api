@@ -3,7 +3,6 @@ from flask_restful import Api
 from database.db import initialize_db
 from resources.routes import initialize_routes
 from flask_cors import CORS
-from satsearch import Search
 
 app = Flask(__name__)
 api = Api(app)

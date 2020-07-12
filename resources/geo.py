@@ -3,7 +3,7 @@ from flask_restful import Resource
 from database.model import User
 from database.getmongo import getImages, getToAi
 from flask import jsonify
-import shapefile as shp
+#import shapefile as shp
 import os, io
 import json
 import fiona
@@ -66,6 +66,7 @@ class GeoSaveImage(Resource):
 class AIRequest(Resource):
     #make requests to AI
     def post(self):
+        
         body = request.get_json()
         req = body['images']
         r = getToAi(req)
@@ -74,13 +75,16 @@ class AIRequest(Resource):
         print (coord)
         if not coord:
             coord = antcoord
+        else:
+            antcoord = coord
         r.insert(0, coord)
-        antcoord = coord
         coord = []
         retorno = requests.post('http://127.0.0.1:8922/ia', json=r)
-        return Response('', status=200)
+        retornodata= retorno.json()
+        print(retornodata['links'])
+        return Response(retornodata, status=200)
     def get(self):
-        pload = {'_id':'1234567','Satus':'Done'}
+        pload = {'_id':'1234567','Status':'Done'}
         r = requests.post('front url',data = pload)
         return 200
 
