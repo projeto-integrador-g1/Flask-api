@@ -58,6 +58,7 @@ def geoSaveImage(email,addlinks):
     imgs = user["user_imgs"].split(",")
     for item in imgs:
         newlinks = newlinks + item + ";"
+    newlinks = newlinks[:-1]
     for item in addlinks:
         newlinks = newlinks + item + ";"
     myquerry = {"user_email": email}
